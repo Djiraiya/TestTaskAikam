@@ -1,0 +1,52 @@
+{
+  "type" : "stat",
+  "totalDays" : 4,
+  "customers" : [ {
+    "name" : "Зимний Аркадий",
+    "purchases" : [ {
+      "name" : "Кофе",
+      "expenses" : 300
+    } ],
+    "totalExpenses" : 300
+  }, {
+    "name" : "Дымов Дмитрий",
+    "purchases" : [ {
+      "name" : "Сок",
+      "expenses" : 240
+    }, {
+      "name" : "Молоко",
+      "expenses" : 55
+    } ],
+    "totalExpenses" : 295
+  }, {
+    "name" : "Иванов Иван",
+    "purchases" : [ {
+      "name" : "Колбаса",
+      "expenses" : 250
+    } ],
+    "totalExpenses" : 250
+  }, {
+    "name" : "Петров Георгий",
+    "purchases" : [ {
+      "name" : "Сыр",
+      "expenses" : 200
+    } ],
+    "totalExpenses" : 200
+  }, {
+    "name" : "Александров Иван",
+    "purchases" : [ {
+      "name" : "Хлеб",
+      "expenses" : 30
+    } ],
+    "totalExpenses" : 30
+  }, {
+    "name" : "Шаповалов Кирилл",
+    "purchases" : [ {
+      "name" : "Хлеб",
+      "expenses" : 30
+    } ],
+    "totalExpenses" : 30
+  } ],
+  "totalExpenses" : 1105,
+  "avgExpenses" : 184.17
+}

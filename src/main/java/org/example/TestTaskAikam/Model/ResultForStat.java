@@ -8,7 +8,7 @@ public class ResultForStat {
     private final String type = "stat";
     private int totalDays;
     private List<CustomerForStat> customers;
-    private double totalExpenses;
+    private int totalExpenses;
     private double avgExpenses;
 
     public ResultForStat(int totalDays, List<CustomerForStat> customers) {
@@ -35,7 +35,7 @@ public class ResultForStat {
         return customers;
     }
 
-    public double getTotalExpenses() {
+    public int getTotalExpenses() {
         return totalExpenses;
     }
 
