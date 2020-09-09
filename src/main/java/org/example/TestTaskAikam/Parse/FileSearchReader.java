@@ -89,7 +89,7 @@ public class FileSearchReader {
             result.put("results", criteriasList);
             String json = result.toString(1);
             try {
-                FileWriter file = new FileWriter(outputPath);
+                PrintWriter file = new PrintWriter(outputPath, "UTF8");
                 file.write(json);
                 file.close();
             } catch (IOException e) {

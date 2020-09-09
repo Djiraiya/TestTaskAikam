@@ -1,12 +1,13 @@
 package org.example.TestTaskAikam.DB;
 
+import org.example.TestTaskAikam.Model.CustomerForStat;
 import org.example.TestTaskAikam.Model.Customers;
+import org.example.TestTaskAikam.Model.Purchases;
+import org.example.TestTaskAikam.Model.ResultForStat;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+
 import java.util.List;
 
 public class SqlQueries {
@@ -106,6 +107,63 @@ public class SqlQueries {
         resultSet.close();
         statement.close();
         return customers;
+    }
+
+    public List<CustomerForStat> findByDate(Date startDate, Date endDate) throws SQLException {
+
+        List<CustomerForStat> customerForStats = new ArrayList<>();
+        Connection connection = DBConnect.getConnect();
+
+        PreparedStatement statement = connection.prepareStatement("SELECT customers.customer_id, customers.lastname, customers.firstName, SUM(products.price) AS total\n" +
+                "FROM products\n" +
+                "JOIN purchases ON purchases.product_id = products.product_id\n" +
+                "JOIN customers ON customers.customer_id = purchases.customer_id\n" +
+                "AND purchases.date BETWEEN ? AND ? AND extract('ISODOW' from date) < 6\n" +
+                "GROUP BY customers.customer_id, customers.lastName, customers.firstName\n" +
+                "ORDER BY total DESC;");
+
+        statement.setDate(1, startDate);
+        statement.setDate(2, endDate);
+
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            int customerId = resultSet.getInt("customer_id");
+            CustomerForStat customers = new CustomerForStat(resultSet.getString("lastname"), resultSet.getString("firstname"));
+            int totalExpenses = resultSet.getInt("total");
+            customers.setPurchases(findPurchasesByCustomerId(customerId, startDate, endDate));
+            customers.setTotalExpenses(totalExpenses);
+            customerForStats.add(customers);
+        }
+        resultSet.close();
+        statement.close();
+        return customerForStats;
+    }
+
+    public List<Purchases> findPurchasesByCustomerId(int customerId, Date startDate, Date endDate) throws SQLException {
+
+        List<Purchases> purchasesList = new ArrayList<>();
+        Connection connection = DBConnect.getConnect();
+
+        PreparedStatement statement = connection.prepareStatement("SELECT products.name, SUM(products.price) AS expenses\n" +
+                "FROM  products\n" +
+                "JOIN purchases ON purchases.product_id = products.product_id\n" +
+                "WHERE purchases.customer_id = ?\n" +
+                "AND purchases.date BETWEEN ? AND ? AND extract('ISODOW' from date) < 6\n" +
+                "GROUP BY products.name\n" +
+                "ORDER BY expenses DESC;");
+
+        statement.setInt(1, customerId);
+        statement.setDate(2, startDate);
+        statement.setDate(3, endDate);
+
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            Purchases purchases = new Purchases(resultSet.getString("name"), resultSet.getInt("expenses"));
+            purchasesList.add(purchases);
+        }
+        resultSet.close();
+        statement.close();
+        return purchasesList;
     }
 
 }
